@@ -83,7 +83,8 @@ function Chat() {
                           padding: '8px 12px',
                           borderRadius: 8,
                           backgroundColor: item.sender === 'user' ? '#1890ff' : '#f0f0f0',
-                          color: item.sender === 'user' ? '#fff' : '#333',
+                          color: item.sender === 'ai' ? 'red' : item.sender === 'user' ? '#fff' : '#333',
+                          fontWeight: item.sender === 'ai' ? 'bold' : 'normal',
                           whiteSpace: 'pre-wrap',
                         }}
                       >

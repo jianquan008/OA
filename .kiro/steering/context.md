@@ -7,16 +7,55 @@
 | 目录 | 路径 | 用途 |
 |------|------|------|
 | 工作目录 | `/Users/kb/devgenie-data/organizations/default_org/projects/AI-OA/generated/admin` | 项目根目录 |
-| Spec目录 | `/Users/kb/devgenie-data/organizations/default_org/projects/AI-OA/generated/admin/.kiro/specs/根据参考文档实现功能` | requirements.md, design.md, tasks.md |
-| 参考文档 | `/Users/kb/devgenie-data/organizations/default_org/projects/AI-OA/generated/admin/.kiro/specs/根据参考文档实现功能/refs` | 用户上传的参考文档（UI设计图、PRD等） |
-| 测试目录 | `/Users/kb/devgenie-data/organizations/default_org/projects/AI-OA/generated/admin/.kiro/tests/根据参考文档实现功能` | test-cases.md, test-report.md |
-| 日志目录 | `/Users/kb/devgenie-data/organizations/default_org/projects/AI-OA/generated/admin/.kiro/logs/根据参考文档实现功能` | workflow.log, summary.md |
+| Spec目录 | `(不适用)` | requirements.md, design.md, tasks.md |
+| 参考文档 | `(不适用)` | 用户上传的参考文档（UI设计图、PRD等） |
+| 测试目录 | `(不适用)` | test-cases.md, test-report.md |
+| 日志目录 | `(不适用)` | workflow.log, summary.md |
 
 ## 当前 Feature
 
-- **Feature 名称**: 根据参考文档实现功能
-- **项目类型**: new
-- **工作流模式**: full
+- **Feature 名称**: 将AI助手的对话内容文字字体改为红色加粗
+- **项目类型**: existing
+- **工作流模式**: quick
 - **执行模式**: auto
 
 **注意**：参考文档在当前 Feature 的 refs 目录下，不要读取其他 Feature 的文档。
+
+## 代码分析工具（重要）
+
+这是一个已有项目。**使用以下工具理解代码**：
+
+### LSP 代码智能（推荐）
+LSP 已初始化，可使用 `code` 工具进行精确代码分析：
+- `code search_symbols "函数名"` - 搜索符号定义
+- `code goto_definition` - 跳转到定义
+- `code find_references` - 查找所有引用
+- `code diagnostics` - 获取编译错误
+
+**优先使用 code 工具**，它比 grep 更精确。
+
+### Knowledge 索引（语义搜索）
+索引名称: `default_org-AI-OA-admin`
+索引路径: `/Users/kb/devgenie-data/organizations/default_org/projects/AI-OA/generated/admin`
+
+使用 `knowledge` 工具：
+1. 先用 `knowledge show` 检查索引是否存在
+2. 如果没有 "default_org-AI-OA-admin"，用 `knowledge add` 建立索引
+3. 用 `knowledge search` 进行语义搜索
+
+### 代码探索工具
+- `grep` - 文本模式搜索（快速定位）
+- `glob` - 文件发现（了解项目结构）
+- `fs_read` - 读取文件内容
+
+### 使用示例
+```
+# 语义搜索
+knowledge search --query "用户认证逻辑"
+
+# 文本搜索
+grep "useState" --include "*.tsx"
+
+# 文件发现
+glob "src/**/*.ts"
+```
