@@ -14,7 +14,7 @@
 
 ## 当前 Feature
 
-- **Feature 名称**: 将AI助手的对话内容文字字体改为红色加粗
+- **Feature 名称**: 在车辆管理界面
 - **项目类型**: existing
 - **工作流模式**: quick
 - **执行模式**: auto

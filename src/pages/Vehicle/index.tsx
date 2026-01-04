@@ -1,16 +1,20 @@
 import { useState } from 'react';
-import { Card, Row, Col, Typography, Tag, Space, Select, Statistic, Progress, Drawer, Descriptions, List } from 'antd';
-import { CarOutlined, EnvironmentOutlined, ThunderboltOutlined, DashboardOutlined } from '@ant-design/icons';
+import { Card, Row, Col, Typography, Tag, Space, Select, Statistic, Progress, Drawer, Descriptions, List, Button, Modal, Form, DatePicker, Input, message } from 'antd';
+import { CarOutlined, EnvironmentOutlined, ThunderboltOutlined, DashboardOutlined, PlusOutlined } from '@ant-design/icons';
 import { mockVehicles, getVehicleStats } from '../../mocks/vehicle';
 import type { Vehicle } from '../../types';
 
 const { Title, Text } = Typography;
+const { RangePicker } = DatePicker;
+const { TextArea } = Input;
 
 function VehiclePage() {
   const [vehicles] = useState<Vehicle[]>(mockVehicles);
   const [statusFilter, setStatusFilter] = useState<Vehicle['status'] | 'all'>('all');
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [currentVehicle, setCurrentVehicle] = useState<Vehicle | null>(null);
+  const [bookingVisible, setBookingVisible] = useState(false);
+  const [form] = Form.useForm();
 
   const stats = getVehicleStats();
 
@@ -25,14 +29,28 @@ function VehiclePage() {
     ? vehicles 
     : vehicles.filter(v => v.status === statusFilter);
 
+  const availableVehicles = vehicles.filter(v => v.status === 'available');
+
   const showDetail = (vehicle: Vehicle) => {
     setCurrentVehicle(vehicle);
     setDrawerVisible(true);
   };
 
+  const handleBooking = () => {
+    form.validateFields().then(values => {
+      console.log('预约信息:', values);
+      message.success('车辆预约申请已提交！');
+      setBookingVisible(false);
+      form.resetFields();
+    });
+  };
+
   return (
     <div>
-      <Title level={2} style={{ marginBottom: 24 }}>车辆管理</Title>
+      <Row justify="space-between" align="middle" style={{ marginBottom: 24 }}>
+        <Col><Title level={2} style={{ margin: 0 }}>车辆管理</Title></Col>
+        <Col><Button type="primary" icon={<PlusOutlined />} onClick={() => setBookingVisible(true)}>预约车辆</Button></Col>
+      </Row>
 
       {/* 统计卡片 */}
       <Row gutter={16} style={{ marginBottom: 24 }}>
@@ -134,6 +152,35 @@ function VehiclePage() {
           </>
         )}
       </Drawer>
+
+      {/* 预约车辆弹窗 */}
+      <Modal
+        title="预约车辆"
+        open={bookingVisible}
+        onOk={handleBooking}
+        onCancel={() => { setBookingVisible(false); form.resetFields(); }}
+        okText="提交申请"
+        cancelText="取消"
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item name="vehicle" label="选择车辆" rules={[{ required: true, message: '请选择车辆' }]}>
+            <Select placeholder="请选择要预约的车辆">
+              {availableVehicles.map(v => (
+                <Select.Option key={v.id} value={v.id}>{v.plate} - {v.model}</Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item name="timeRange" label="用车时间" rules={[{ required: true, message: '请选择用车时间' }]}>
+            <RangePicker showTime format="YYYY-MM-DD HH:mm" style={{ width: '100%' }} />
+          </Form.Item>
+          <Form.Item name="destination" label="目的地" rules={[{ required: true, message: '请输入目的地' }]}>
+            <Input placeholder="请输入目的地" />
+          </Form.Item>
+          <Form.Item name="reason" label="用车事由" rules={[{ required: true, message: '请输入用车事由' }]}>
+            <TextArea rows={3} placeholder="请输入用车事由" />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 }
