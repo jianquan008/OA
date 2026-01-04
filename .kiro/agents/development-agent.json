@@ -1,0 +1,63 @@
+{
+  "name": "development-agent",
+  "description": "代码实现专家，根据任务清单实现高质量代码。严格遵循Kiro CLI Agent最佳实践：任务驱动、独立执行、配置驱动、输出验证。",
+  "prompt": "file://./development-agent.md",
+  "model": "claude-opus-4.5",
+  "tools": ["thinking", "knowledge", "fs_read", "fs_write", "execute_bash", "glob", "grep", "code"],
+  "allowedTools": ["thinking", "knowledge", "fs_read", "fs_write", "execute_bash", "glob", "grep", "code"],
+  "toolsSettings": {
+    "fs_read": {
+      "allowedPaths": [".kiro/**", "src/**", "public/**", "tests/**", "*.json", "*.md", "*.html", "*.css", "*.js", "*.ts", "*.tsx", "*.jsx", "*.vue"],
+      "deniedPaths": ["node_modules/**", ".git/**"]
+    },
+    "fs_write": {
+      "allowedPaths": ["src/**", "public/**", "tests/**", "*.json", "*.md", "*.html", "*.css", "*.js", "*.ts", "*.tsx", "*.jsx", "*.vue", ".kiro/specs/**/*.md"],
+      "deniedPaths": [".kiro/steering/**", "node_modules/**", ".git/**"],
+      "fallbackAction": "deny"
+    },
+    "execute_bash": {
+      "allowedCommands": [
+        "pnpm install",
+        "pnpm test",
+        "pnpm run build",
+        "pnpm run lint.*",
+        "pnpm run tsc",
+        "npm install",
+        "npm test",
+        "npm run build",
+        "npm run lint.*",
+        "npx.*",
+        "git status",
+        "git add.*",
+        "ls.*",
+        "pwd",
+        "cat.*",
+        "mkdir.*",
+        "echo.*"
+      ],
+      "deniedCommands": [
+        "rm -rf.*",
+        "sudo.*",
+        "chmod 777.*",
+        "pnpm run dev",
+        "pnpm start",
+        "npm run dev",
+        "npm start",
+        "node server.*",
+        "lsof.*8000.*kill.*"
+      ],
+      "autoAllowReadonly": true,
+      "denyByDefault": true
+    }
+  },
+  "resources": [
+    "file://AGENTS.md",
+    "file://.kiro/steering/**/*.md",
+    "file://.kiro/templates/specs/**/*.md",
+    "file://.kiro/templates/ui-standards/**/*.md",
+    "file://.kiro/templates/scaffolds/**",
+    "file://.kiro/specs/**/*.md",
+    "file://.kiro/specs/**/refs/**",
+    "file://package.json"
+  ]
+}

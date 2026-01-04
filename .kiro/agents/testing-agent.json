@@ -1,0 +1,63 @@
+{
+  "name": "testing-agent",
+  "description": "端到端测试专家，执行真实UI测试并生成测试报告。严格遵循Kiro CLI Agent最佳实践：单一职责、独立执行、配置驱动、输出验证。",
+  "prompt": "file://./testing-agent.md",
+  "model": "claude-opus-4.5",
+  "mcpServers": {
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest", "--headless", "--isolated"],
+      "timeout": 180000
+    }
+  },
+  "tools": ["thinking", "knowledge", "code", "fs_read", "fs_write", "execute_bash", "grep", "glob", "@chrome-devtools"],
+  "allowedTools": ["thinking", "knowledge", "code", "fs_read", "fs_write", "execute_bash", "grep", "glob", "@chrome-devtools/*"],
+  "toolsSettings": {
+    "fs_read": {
+      "allowedPaths": [".kiro/**", "src/**", "package.json", "*.md", "*.json"],
+      "deniedPaths": ["node_modules/**", ".git/**"]
+    },
+    "fs_write": {
+      "allowedPaths": [".kiro/tests/**/*.md", ".kiro/tests/**/*.png"],
+      "deniedPaths": ["src/**", "package.json", ".kiro/steering/**"],
+      "fallbackAction": "deny"
+    },
+    "execute_bash": {
+      "allowedCommands": [
+        "cat .*",
+        "ls .*", 
+        "pnpm install",
+        "pnpm run dev.*",
+        "pnpm run build",
+        "pnpm start.*",
+        "npm install",
+        "npm run dev.*",
+        "npm start.*",
+        "pkill.*",
+        "curl.*",
+        "lsof.*",
+        "sleep.*",
+        "nohup.*",
+        "wc.*",
+        "echo.*"
+      ],
+      "deniedCommands": [
+        "rm -rf.*",
+        "sudo.*",
+        "pkill -f uvicorn.*",
+        "pkill.*8000.*"
+      ],
+      "autoAllowReadonly": true,
+      "denyByDefault": true
+    }
+  },
+  "resources": [
+    "file://AGENTS.md",
+    "file://.kiro/steering/**/*.md",
+    "file://.kiro/templates/testing/**/*.md",
+    "file://.kiro/specs/**/*.md",
+    "file://.kiro/refs/**",
+    "file://.kiro/specs/**/refs/**",
+    "file://package.json"
+  ]
+}
